@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Ichika.png">
+	<!-- Created with Adobe Animate version 22.0.0.93 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="ichika dodge0000" x="0" y="0" width="918" height="1137" frameX="-37" frameY="-212" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0001" x="918" y="0" width="1315" height="1339" frameX="0" frameY="-10" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0002" x="2233" y="0" width="1526" height="1339" frameX="0" frameY="-10" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0003" x="3759" y="0" width="1284" height="1335" frameX="-19" frameY="-14" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0004" x="3759" y="0" width="1284" height="1335" frameX="-19" frameY="-14" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0005" x="5043" y="0" width="1256" height="1330" frameX="-35" frameY="-19" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0006" x="5043" y="0" width="1256" height="1330" frameX="-35" frameY="-19" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0007" x="6299" y="0" width="1238" height="1339" frameX="-30" frameY="-10" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0008" x="6299" y="0" width="1238" height="1339" frameX="-30" frameY="-10" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0009" x="0" y="1339" width="1209" height="1338" frameX="-33" frameY="-11" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0010" x="0" y="1339" width="1209" height="1338" frameX="-33" frameY="-11" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0011" x="1209" y="1339" width="1120" height="1340" frameX="-33" frameY="-9" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0012" x="1209" y="1339" width="1120" height="1340" frameX="-33" frameY="-9" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika dodge0013" x="2329" y="1339" width="1003" height="1349" frameX="-41" frameY="0" frameWidth="1526" frameHeight="1349"/>
+	<SubTexture name="ichika down0000" x="3332" y="1339" width="693" height="1092" frameX="0" frameY="-20" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0001" x="3332" y="1339" width="693" height="1092" frameX="0" frameY="-20" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0002" x="4025" y="1339" width="693" height="1096" frameX="0" frameY="-16" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0003" x="4025" y="1339" width="693" height="1096" frameX="0" frameY="-16" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0004" x="4718" y="1339" width="693" height="1107" frameX="0" frameY="-6" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0005" x="4718" y="1339" width="693" height="1107" frameX="0" frameY="-6" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0006" x="5411" y="1339" width="693" height="1111" frameX="0" frameY="-2" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0007" x="5411" y="1339" width="693" height="1111" frameX="0" frameY="-2" frameWidth="693" frameHeight="1113"/>
+	<SubTexture name="ichika down0008" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0009" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0010" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0011" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0012" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0013" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika down0014" x="6104" y="1339" width="693" height="1113"/>
+	<SubTexture name="ichika idle0000" x="6797" y="1339" width="739" height="1143" frameX="0" frameY="-8" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0001" x="6797" y="1339" width="739" height="1143" frameX="0" frameY="-8" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0002" x="0" y="2688" width="732" height="1131" frameX="0" frameY="-20" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0003" x="0" y="2688" width="732" height="1131" frameX="0" frameY="-20" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0004" x="732" y="2688" width="728" height="1137" frameX="-3" frameY="-14" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0005" x="732" y="2688" width="728" height="1137" frameX="-3" frameY="-14" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0006" x="1460" y="2688" width="729" height="1143" frameX="-3" frameY="-8" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0007" x="1460" y="2688" width="729" height="1143" frameX="-3" frameY="-8" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0008" x="2189" y="2688" width="736" height="1147" frameX="-1" frameY="-4" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0009" x="2189" y="2688" width="736" height="1147" frameX="-1" frameY="-4" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0010" x="2925" y="2688" width="738" height="1149" frameX="0" frameY="-2" frameWidth="739" frameHeight="1151"/>
+	<SubTexture name="ichika idle0011" x="3663" y="2688" width="739" height="1151"/>
+	<SubTexture name="ichika idle0012" x="3663" y="2688" width="739" height="1151"/>
+	<SubTexture name="ichika idle0013" x="3663" y="2688" width="739" height="1151"/>
+	<SubTexture name="ichika idle0014" x="3663" y="2688" width="739" height="1151"/>
+	<SubTexture name="ichika left0000" x="4402" y="2688" width="744" height="1189" frameX="-32" frameY="0" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0001" x="4402" y="2688" width="744" height="1189" frameX="-32" frameY="0" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0002" x="5146" y="2688" width="799" height="1188" frameX="0" frameY="-1" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0003" x="5146" y="2688" width="799" height="1188" frameX="0" frameY="-1" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0004" x="5945" y="2688" width="782" height="1184" frameX="-11" frameY="-5" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0005" x="5945" y="2688" width="782" height="1184" frameX="-11" frameY="-5" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0006" x="6727" y="2688" width="765" height="1180" frameX="-26" frameY="-9" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0007" x="6727" y="2688" width="765" height="1180" frameX="-26" frameY="-9" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0008" x="0" y="3877" width="754" height="1178" frameX="-38" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0009" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0010" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0011" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0012" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0013" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika left0014" x="754" y="3877" width="753" height="1178" frameX="-39" frameY="-11" frameWidth="799" frameHeight="1189"/>
+	<SubTexture name="ichika miss0000" x="1507" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0001" x="2246" y="3877" width="739" height="1150" frameX="0" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0002" x="2246" y="3877" width="739" height="1150" frameX="-10" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0003" x="2246" y="3877" width="739" height="1150" frameX="-3" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0004" x="2246" y="3877" width="739" height="1150" frameX="-7" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0005" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0006" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0007" x="2985" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0008" x="2985" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0009" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0010" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0011" x="2985" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0012" x="2985" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0013" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika miss0014" x="2246" y="3877" width="739" height="1150" frameX="-5" frameY="0" frameWidth="749" frameHeight="1150"/>
+	<SubTexture name="ichika right0000" x="3724" y="3877" width="722" height="1159" frameX="-32" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0001" x="3724" y="3877" width="722" height="1159" frameX="-32" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0002" x="4446" y="3877" width="737" height="1159" frameX="-21" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0003" x="4446" y="3877" width="737" height="1159" frameX="-21" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0004" x="5183" y="3877" width="743" height="1159" frameX="-6" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0005" x="5183" y="3877" width="743" height="1159" frameX="-6" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0006" x="5926" y="3877" width="742" height="1159" frameX="-2" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0007" x="5926" y="3877" width="742" height="1159" frameX="-2" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0008" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0009" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0010" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0011" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0012" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0013" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika right0014" x="6668" y="3877" width="741" height="1159" frameX="0" frameY="0" frameWidth="758" frameHeight="1159"/>
+	<SubTexture name="ichika up0000" x="0" y="5055" width="873" height="1189"/>
+	<SubTexture name="ichika up0001" x="0" y="5055" width="873" height="1189"/>
+	<SubTexture name="ichika up0002" x="873" y="5055" width="856" height="1189" frameX="-5" frameY="0" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0003" x="873" y="5055" width="856" height="1189" frameX="-5" frameY="0" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0004" x="1729" y="5055" width="821" height="1188" frameX="-22" frameY="0" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0005" x="1729" y="5055" width="821" height="1188" frameX="-22" frameY="0" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0006" x="2550" y="5055" width="818" height="1186" frameX="-26" frameY="-2" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0007" x="2550" y="5055" width="818" height="1186" frameX="-26" frameY="-2" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0008" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0009" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0010" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0011" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0012" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0013" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+	<SubTexture name="ichika up0014" x="3368" y="5055" width="817" height="1185" frameX="-27" frameY="-3" frameWidth="873" frameHeight="1189"/>
+</TextureAtlas>

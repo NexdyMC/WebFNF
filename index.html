@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rhythm Game - WebFnf</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen text-white bg-gradient-to-b from-blue-600 to-black bg-fixed select-none">
+
+<!-- ========================================================== -->
+<!-- LAYAR 1: ASSETS GAME (3 KOLOM & SLOT KARAKTER)             -->
+<!-- ========================================================== -->
+<section id="screen-assets">
+<main class="max-w-7xl mx-auto p-4 sm:p-6">
+  <header class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+    <div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">Assets game</h1>
+      <p class="text-blue-100/80 text-sm mt-1">Pilih file untuk setiap kotak, atau seret semuanya sekaligus ke halaman ini.</p>
+    </div>
+  </header>
+
+  <div class="grid lg:grid-cols-3 gap-5">
+    <!-- KOLOM 1: FILE INTI (Wajib) -->
+    <section class="space-y-4">
+      <div id="slots" class="space-y-3"></div>
+
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4">
+        <h2 class="font-bold text-sm">Assets bawaan</h2>
+        <p class="text-xs text-white/60 mb-2">Sudah terpasang, tidak perlu diunggah.</p>
+        <p class="text-xs sm:text-sm"><span id="a-png" class="text-yellow-300 font-semibold">Memuat</span> NOTE_assets.png (spritesheet)</p>
+        <p class="text-xs sm:text-sm"><span class="text-lime-300 font-semibold">Siap</span> Atlas XML, <span id="a-n"></span> frame terpakai</p>
+      </div>
+    </section>
+
+    <!-- KOLOM 2: KARAKTER (Sunnah / Opsional) & INFO LAGU -->
+    <section class="space-y-4">
+      <!-- Kotak Karakter Lawan & Pemain -->
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold text-sm sm:text-base">Karakter (Opsional)</h2>
+          <span class="text-xs text-lime-400 font-semibold bg-lime-400/10 px-2 py-0.5 rounded">Bawaan Siap</span>
+        </div>
+        <p class="text-xs text-white/60">Ikon wajah yang tampil di health bar. Sudah tersedia bawaan, bisa diganti lewat seret file / klik.</p>
+
+        <!-- Karakter Lawan (Kiri) -->
+        <div class="char-drop rounded-xl bg-black/50 border border-white/10 p-3 flex items-center justify-between gap-3" data-char="charOpp">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-red-600/20 border border-red-500/30 overflow-hidden flex items-center justify-center relative shadow">
+              <img id="opp-icon-prev" src="images/icons/icon-kasumi.png" alt="Lawan" class="h-full w-[200%] max-w-none object-cover">
+            </div>
+            <div>
+              <p class="text-xs font-bold text-red-400">Lawan (Kiri)</p>
+              <p id="opp-icon-name" class="text-xs text-white/80 font-medium truncate max-w-[110px] sm:max-w-[130px]">Kasumi (Bawaan)</p>
+            </div>
+          </div>
+          <div class="flex gap-1.5">
+            <label class="btn text-xs px-2.5 py-1">Ganti<input type="file" id="input-char-opp" class="sr-only" accept="image/*"></label>
+            <button type="button" id="btn-reset-char-opp" class="btn text-xs px-2.5 py-1 text-white/60 hover:text-white" title="Reset ke Kasumi">↺</button>
+          </div>
+        </div>
+
+        <!-- Karakter Pemain (Kanan) -->
+        <div class="char-drop rounded-xl bg-black/50 border border-white/10 p-3 flex items-center justify-between gap-3" data-char="charPlay">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-lime-600/20 border border-lime-500/30 overflow-hidden flex items-center justify-center relative shadow scale-x-[-1]">
+              <img id="play-icon-prev" src="images/icons/icon-ichika.png" alt="Pemain" class="h-full w-[200%] max-w-none object-cover">
+            </div>
+            <div>
+              <p class="text-xs font-bold text-lime-400">Pemain (Kanan)</p>
+              <p id="play-icon-name" class="text-xs text-white/80 font-medium truncate max-w-[110px] sm:max-w-[130px]">Ichika (Bawaan)</p>
+            </div>
+          </div>
+          <div class="flex gap-1.5">
+            <label class="btn text-xs px-2.5 py-1">Ganti<input type="file" id="input-char-play" class="sr-only" accept="image/*"></label>
+            <button type="button" id="btn-reset-char-play" class="btn text-xs px-2.5 py-1 text-white/60 hover:text-white" title="Reset ke Ichika">↺</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Lagu -->
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4">
+        <h2 class="font-bold mb-3 text-sm sm:text-base">Info lagu</h2>
+        <dl class="grid grid-cols-3 gap-3 text-sm">
+          <div class="col-span-3"><dt class="text-white/60 text-xs">Judul</dt><dd id="i-title" class="font-bold text-base sm:text-lg truncate">-</dd></div>
+          <div><dt class="text-white/60 text-xs">Format</dt><dd id="i-format" class="font-bold text-xs sm:text-sm text-cyan-300 truncate">-</dd></div>
+          <div><dt class="text-white/60 text-xs">BPM</dt><dd id="i-bpm">-</dd></div>
+          <div><dt class="text-white/60 text-xs">Speed chart</dt><dd id="i-speed">-</dd></div>
+          <div><dt class="text-white/60 text-xs">Durasi</dt><dd id="i-dur">-</dd></div>
+          <div><dt class="text-white/60 text-xs">Jumlah note</dt><dd id="i-n">-</dd></div>
+          <div><dt class="text-white/60 text-xs">Hold note</dt><dd id="i-h">-</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- KOLOM 3: PREVIEW, PENGATURAN & TOMBOL MAIN -->
+    <section class="space-y-4">
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4">
+        <h2 class="font-bold mb-2 text-sm sm:text-base">Preview jalur</h2>
+        <canvas id="pv" width="440" height="260" class="w-full h-auto rounded-xl bg-black/50"></canvas>
+      </div>
+
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4 space-y-3">
+        <h2 class="font-bold text-sm sm:text-base">Pengaturan</h2>
+        <div>
+          <p class="text-xs text-white/60 mb-1">Tombol (klik, lalu tekan tombol baru)</p>
+          <div class="grid grid-cols-4 gap-2" id="keys"></div>
+        </div>
+        <label class="block text-xs sm:text-sm">Tampilan jalur (Layout)
+          <select id="lane-mode" class="w-full mt-1 text-xs bg-black/60 border border-white/20 rounded-lg px-2.5 py-1.5 text-white font-medium focus:outline-none focus:border-blue-400">
+            <option value="auto">⚡ Otomatis (1 Jalur di HP, 2 Jalur di PC)</option>
+            <option value="middle">🎯 1 Jalur Tengah (Middle Scroll)</option>
+            <option value="dual">🔀 2 Jalur Ganda (Lawan & Pemain)</option>
+          </select>
+        </label>
+        <label class="block text-xs sm:text-sm">Kecepatan note <span id="speedV" class="text-white/70"></span>
+          <input id="speed" type="range" min="1" max="4" step="0.1" class="w-full accent-cyan-300"></label>
+        <label class="block text-xs sm:text-sm">Offset audio <span id="offsetV" class="text-white/70"></span>
+          <input id="offset" type="range" min="-200" max="200" step="5" class="w-full accent-cyan-300"></label>
+        <label class="block text-xs sm:text-sm">Volume <span id="volumeV" class="text-white/70"></span>
+          <input id="volume" type="range" min="0" max="100" step="1" class="w-full accent-cyan-300"></label>
+      </div>
+
+      <div class="rounded-2xl bg-black/40 border border-white/15 p-4 space-y-3">
+        <div id="chips" class="flex flex-wrap gap-x-4 gap-y-1"></div>
+        <ul id="warn" class="space-y-1 text-xs sm:text-sm text-yellow-300"></ul>
+        <button id="play" class="w-full rounded-xl bg-[#ff2f6a] py-3 text-lg font-extrabold hover:brightness-110 disabled:opacity-40 disabled:cursor-not-allowed shadow-lg" disabled>Main sekarang</button>
+        <p id="hint" class="text-xs text-white/60 text-center">Pilih chart dan musik dulu.</p>
+      </div>
+    </section>
+  </div>
+</main>
+</section>
+
+<!-- ========================================================== -->
+<!-- LAYAR 2: RUN MUSIC (CANVAS FULLSCREEN & HEALTH BAR ATAS)   -->
+<!-- ========================================================== -->
+<section id="screen-game" class="is-hidden select-none">
+  <div id="game-stage" class="rounded-none sm:rounded-2xl border border-white/10 overflow-hidden bg-black/85">
+    <canvas id="game-canvas" width="1280" height="720" class="w-full h-full object-contain block"></canvas>
+    
+    <!-- HUD Layer -->
+    <div id="game-hud" class="absolute inset-0 pointer-events-none p-3 sm:p-4 flex flex-col justify-between select-none">
+      <!-- TOP BAR: JUDUL, HEALTH BAR + IKON KARAKTER, DAN KONTROL -->
+      <div class="flex items-start justify-between text-white pointer-events-auto w-full gap-2 sm:gap-3">
+        <!-- Kiri: Judul Lagu -->
+        <div class="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 shadow shrink-0">
+          <span id="hud-title" class="font-bold text-xs sm:text-sm max-w-[100px] sm:max-w-xs truncate">-</span>
+          <span id="hud-role-badge" class="hidden text-[10px] px-1.5 py-0.5 rounded font-black tracking-wider"></span>
+          <span id="hud-autoplay-badge" class="hidden text-[10px] bg-yellow-400 text-black px-1.5 py-0.5 rounded font-black tracking-wider">AUTOPLAY</span>
+        </div>
+
+        <!-- Tengah: Health Bar + Karakter Icons + Timer Progress -->
+        <div class="flex flex-col items-center flex-1 max-w-sm sm:max-w-md mx-auto">
+          <!-- Baris Timer -->
+          <div class="flex items-center gap-2 text-[11px] sm:text-xs font-mono mb-1 bg-black/50 backdrop-blur-sm px-2.5 py-0.5 rounded-full border border-white/10">
+            <span id="hud-time" class="font-medium">0:00</span>
+            <div class="w-20 sm:w-44 h-1.5 bg-white/20 rounded-full overflow-hidden">
+              <div id="hud-progress-bar" class="h-full bg-cyan-400 w-0 transition-all duration-100"></div>
+            </div>
+            <span id="hud-duration" class="font-medium text-white/60">0:00</span>
+          </div>
+
+          <!-- Health Bar dengan Ikon Karakter di Atasnya -->
+          <div class="relative w-full flex items-center pt-2.5 pb-1">
+            <!-- Background Bar -->
+            <div class="w-full h-3.5 sm:h-4 bg-red-600 rounded-full overflow-hidden border border-white/20 relative shadow-inner">
+              <div id="health-bar" class="h-full bg-lime-500 float-right transition-all duration-75" style="width: 50%;"></div>
+            </div>
+
+            <!-- Wadah Ikon Mengikuti Posisi Pembatas Bar -->
+            <div id="icon-head-container" class="absolute top-1/2 -translate-y-1/2 flex items-center pointer-events-none transition-all duration-75" style="left: 50%; transform: translate(-50%, -50%);">
+              <!-- Ikon Lawan (Kasumi) -->
+              <div class="w-9 h-9 sm:w-11 sm:h-11 overflow-hidden relative drop-shadow-md -mr-1.5 z-10">
+                <img id="icon-opp-frame" src="images/icons/icon-kasumi.png" class="absolute top-0 left-0 h-full w-[200%] max-w-none transition-transform duration-100" style="transform: translateX(0%);">
+              </div>
+              <!-- Ikon Pemain (Ichika, Flipped) -->
+              <div class="w-9 h-9 sm:w-11 sm:h-11 overflow-hidden relative drop-shadow-md -ml-1.5 z-10 scale-x-[-1]">
+                <img id="icon-play-frame" src="images/icons/icon-ichika.png" class="absolute top-0 left-0 h-full w-[200%] max-w-none transition-transform duration-100" style="transform: translateX(0%);">
+              </div>
+            </div>
+          </div>
+
+          <!-- Baris Teks Skor di Bawah Health Bar -->
+          <div class="text-[10px] sm:text-xs font-semibold text-white/90 drop-shadow tracking-wide flex items-center gap-1 sm:gap-2">
+            <span>Skor: <span id="hud-score" class="font-bold text-yellow-300">0</span></span>
+            <span class="text-white/40">•</span>
+            <span>Combo: <span id="hud-combo" class="font-bold text-cyan-300">0</span></span>
+            <span class="text-white/40">•</span>
+            <span>Akurasi: <span id="hud-acc" class="font-bold text-lime-300">100.00%</span></span>
+            <span class="text-white/40">•</span>
+            <span>Rank: <span id="hud-rank" class="font-bold text-fuchsia-300">S</span></span>
+          </div>
+        </div>
+
+        <!-- Kanan: Tombol Jalur, Sentuh, Fullscreen & Jeda -->
+        <div class="flex items-center gap-1 sm:gap-1.5 shrink-0">
+          <button id="btn-toggle-scroll" type="button" class="btn text-xs px-2 sm:px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 flex items-center gap-1 border border-white/10" title="Ganti Mode Jalur (1 Jalur Tengah / 2 Jalur Ganda)" aria-label="Mode Jalur">
+            <span>🎯</span> <span id="label-scroll-mode" class="hidden md:inline">1 Jalur</span>
+          </button>
+          <button id="btn-toggle-touch" type="button" class="btn text-xs px-2 sm:px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 flex items-center gap-1 border border-white/10" title="Toggle Tombol Sentuh Tambahan" aria-label="Toggle Tombol Sentuh">
+            <span>📱</span> <span class="hidden md:inline">Tombol</span>
+          </button>
+          <button id="btn-fullscreen" type="button" class="btn text-xs px-2 sm:px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 flex items-center gap-1 border border-white/10" title="Layar Penuh (Fullscreen)" aria-label="Layar Penuh Fullscreen">
+            <span>⛶</span> <span class="hidden md:inline">Penuh</span>
+          </button>
+          <button id="btn-pause" type="button" class="btn flex items-center gap-1 bg-white/15 hover:bg-white/25 text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 rounded-lg font-bold" aria-label="Jeda Permainan">
+            <span>⏸</span> <span class="hidden sm:inline">Jeda</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CENTER: COUNTDOWN ASLI FNF & POPUP PENILAIAN FNF -->
+      <div class="relative flex-1 flex items-center justify-center pointer-events-none">
+        <div id="countdown-overlay" class="hidden flex items-center justify-center"></div>
+        <div id="rating-popup" class="absolute flex flex-col items-center justify-center pointer-events-none" style="top: 30%;"></div>
+      </div>
+
+      <!-- BOTTOM: KONTROL SENTUH (Pojok Kanan Bawah Jalur Pemain) -->
+      <div id="touch-controls" class="hidden absolute bottom-4 sm:bottom-6 right-4 sm:right-8 grid grid-cols-4 gap-2 w-64 sm:w-72 pointer-events-auto">
+        <button type="button" data-lane="0" tabindex="-1" aria-label="Jalur Kiri (D)" class="touch-btn min-h-[48px] h-12 rounded-xl bg-purple-600/40 border border-purple-400/50 active:bg-purple-600/80 text-base font-bold text-white shadow-lg backdrop-blur-sm">D</button>
+        <button type="button" data-lane="1" tabindex="-1" aria-label="Jalur Bawah (F)" class="touch-btn min-h-[48px] h-12 rounded-xl bg-blue-600/40 border border-blue-400/50 active:bg-blue-600/80 text-base font-bold text-white shadow-lg backdrop-blur-sm">F</button>
+        <button type="button" data-lane="2" tabindex="-1" aria-label="Jalur Atas (J)" class="touch-btn min-h-[48px] h-12 rounded-xl bg-green-600/40 border border-green-400/50 active:bg-green-600/80 text-base font-bold text-white shadow-lg backdrop-blur-sm">J</button>
+        <button type="button" data-lane="3" tabindex="-1" aria-label="Jalur Kanan (K)" class="touch-btn min-h-[48px] h-12 rounded-xl bg-red-600/40 border border-red-400/50 active:bg-red-600/80 text-base font-bold text-white shadow-lg backdrop-blur-sm">K</button>
+      </div>
+    </div>
+
+    <!-- Modal Jeda Overlay -->
+    <div id="pause-modal" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-4">
+      <div class="bg-gray-900 border border-white/20 rounded-2xl p-6 max-w-xs sm:max-w-sm w-full text-center space-y-4 shadow-2xl">
+        <h2 class="text-2xl font-black tracking-wider text-white">JEDA</h2>
+        <div class="space-y-2.5">
+          <button id="btn-resume" type="button" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold text-white transition">Lanjutkan</button>
+          <button id="btn-restart" type="button" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 font-bold text-white transition">Ulangi lagu</button>
+          <button id="btn-back-assets" type="button" class="w-full py-2.5 rounded-xl bg-red-600/80 hover:bg-red-600 font-bold text-white transition">Kembali ke assets game</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================== -->
+<!-- LAYAR 3: RESULT / SCORE (PERINGKAT, BREAKDOWN & ULANGI)     -->
+<!-- ========================================================== -->
+<section id="screen-result" class="hidden min-h-screen text-white bg-gradient-to-b from-blue-600 to-black bg-fixed flex items-center justify-center p-4 sm:p-6 select-none">
+  <div class="max-w-2xl w-full bg-black/60 backdrop-blur-md border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+    <!-- Header: Judul Lagu & Status Selesai/Gagal -->
+    <div class="text-center space-y-1 border-b border-white/10 pb-4">
+      <h1 id="res-title" class="text-2xl sm:text-3xl font-extrabold tracking-tight truncate">-</h1>
+      <p id="res-status" class="text-base sm:text-lg font-bold tracking-wide text-lime-400">Lagu selesai</p>
+      <p id="res-role" class="text-xs text-white/70 font-medium"></p>
+    </div>
+
+    <!-- Main Score & Rank Overview -->
+    <div class="flex flex-col sm:flex-row items-center justify-around gap-6 bg-white/5 rounded-2xl p-5 border border-white/10">
+      <!-- Rank Badge -->
+      <div class="flex flex-col items-center justify-center">
+        <span class="text-xs uppercase tracking-widest text-white/60 font-semibold mb-1">Peringkat</span>
+        <div id="res-rank" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-tr from-yellow-400 to-amber-200 text-black flex items-center justify-center text-5xl sm:text-6xl font-black shadow-xl drop-shadow">
+          S
+        </div>
+      </div>
+
+      <!-- Key Stats: Skor, Akurasi, Combo Maks -->
+      <div class="space-y-3 text-center sm:text-left">
+        <div>
+          <span class="text-xs text-white/60 block font-medium">Skor Akhir</span>
+          <span id="res-score" class="text-2xl sm:text-3xl font-black text-yellow-300">0</span>
+        </div>
+        <div class="flex items-center gap-6 justify-center sm:justify-start">
+          <div>
+            <span class="text-xs text-white/60 block font-medium">Akurasi</span>
+            <span id="res-accuracy" class="text-lg sm:text-xl font-bold text-lime-300">0.00%</span>
+          </div>
+          <div class="w-px h-8 bg-white/15"></div>
+          <div>
+            <span class="text-xs text-white/60 block font-medium">Combo Maksimal</span>
+            <span id="res-max-combo" class="text-lg sm:text-xl font-bold text-cyan-300">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rating Breakdown with Normalized Horizontal Bars -->
+    <div class="space-y-2.5 bg-black/40 rounded-2xl p-4 sm:p-5 border border-white/10 text-sm">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-white/60 mb-3">Rincian Penilaian</h2>
+
+      <!-- Sick -->
+      <div class="flex items-center gap-3">
+        <span class="w-12 font-bold text-cyan-300">Sick</span>
+        <span id="res-count-sick" class="w-14 text-right font-mono font-semibold">0</span>
+        <div class="flex-1 h-3.5 bg-white/10 rounded-full overflow-hidden">
+          <div id="res-bar-sick" class="h-full bg-cyan-400 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Good -->
+      <div class="flex items-center gap-3">
+        <span class="w-12 font-bold text-lime-300">Good</span>
+        <span id="res-count-good" class="w-14 text-right font-mono font-semibold">0</span>
+        <div class="flex-1 h-3.5 bg-white/10 rounded-full overflow-hidden">
+          <div id="res-bar-good" class="h-full bg-lime-400 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Bad -->
+      <div class="flex items-center gap-3">
+        <span class="w-12 font-bold text-amber-300">Bad</span>
+        <span id="res-count-bad" class="w-14 text-right font-mono font-semibold">0</span>
+        <div class="flex-1 h-3.5 bg-white/10 rounded-full overflow-hidden">
+          <div id="res-bar-bad" class="h-full bg-amber-400 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Shit -->
+      <div class="flex items-center gap-3">
+        <span class="w-12 font-bold text-orange-400">Shit</span>
+        <span id="res-count-shit" class="w-14 text-right font-mono font-semibold">0</span>
+        <div class="flex-1 h-3.5 bg-white/10 rounded-full overflow-hidden">
+          <div id="res-bar-shit" class="h-full bg-orange-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+      </div>
+
+      <!-- Miss -->
+      <div class="flex items-center gap-3">
+        <span class="w-12 font-bold text-red-400">Miss</span>
+        <span id="res-count-miss" class="w-14 text-right font-mono font-semibold">0</span>
+        <div class="flex-1 h-3.5 bg-white/10 rounded-full overflow-hidden">
+          <div id="res-bar-miss" class="h-full bg-red-500 rounded-full transition-all duration-500" style="width: 0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+      <button id="btn-result-replay" type="button" class="w-full py-3 rounded-xl bg-[#ff2f6a] hover:brightness-110 text-white font-extrabold text-base transition shadow-lg">
+        Main lagi
+      </button>
+      <button id="btn-result-assets" type="button" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-base transition border border-white/15">
+        Kembali ke assets game
+      </button>
+    </div>
+  </div>
+</section>
+
+<div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg bg-white text-black text-sm px-4 py-2 hidden shadow-2xl z-50"></div>
+
+<!-- ========================================================== -->
+<!-- SCRIPTS MODULAR (KOMPATIBEL DENGAN PROTOKOL file:///)        -->
+<!-- ========================================================== -->
+<script src="js/atlas.js"></script>
+<script src="js/main.js"></script>
+<script src="js/screen-assets.js"></script>
+<script src="js/screen-game.js"></script>
+<script src="js/screen-result.js"></script>
+
+</body>
+</html>

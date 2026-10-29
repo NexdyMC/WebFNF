@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FNF Chart Maker - Audio ke JSON Note</title>
+<style>
+  :root{
+    --bg:#0b0b12; --panel:#14141f; --line:#26263a; --text:#e8e8f2; --muted:#8b8ba8;
+    --accent:#00e5ff; --accent2:#b14bff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:980px;margin:0 auto;padding:24px 16px 48px}
+  h1{font-size:1.5rem;margin:0 0 4px;letter-spacing:.5px}
+  h1 span{color:var(--accent)}
+  .sub{color:var(--muted);margin:0 0 20px;font-size:.9rem}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+  .drop{border:2px dashed var(--line);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent);background:rgba(0,229,255,.05)}
+  .drop b{color:var(--accent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+  label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:4px}
+  input[type=text],input[type=number],select{
+    width:100%;padding:8px 10px;background:#0d0d16;border:1px solid var(--line);border-radius:8px;color:var(--text);font-size:.9rem
+  }
+  input[type=range]{width:100%}
+  .row{display:flex;align-items:center;gap:8px}
+  .hint{font-size:.72rem;color:var(--muted);margin-top:3px}
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+  button{background:var(--accent2);color:#fff;border:0;border-radius:8px;padding:9px 16px;font-size:.9rem;cursor:pointer;font-weight:600}
+  button.alt{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  #status{font-size:.88rem;color:var(--accent);min-height:1.3em}
+  .stats{display:flex;gap:20px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);margin-top:6px}
+  .stats b{color:var(--text)}
+  canvas{width:100%;height:150px;display:block;background:#0d0d16;border-radius:8px;border:1px solid var(--line)}
+  textarea{width:100%;height:260px;background:#0d0d16;color:#bfe9ff;border:1px solid var(--line);border-radius:8px;
+    padding:10px;font-family:Consolas,monospace;font-size:.75rem;resize:vertical}
+  .legend{display:flex;gap:14px;font-size:.75rem;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+  .chk{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>FNF <span>Chart Maker</span></h1>
+  <p class="sub">Ubah lagu (mp3/mp4/wav/ogg) jadi file JSON note Friday Night Funkin' (format Psych Engine). Semua diproses di browser.</p>
+
+  <div class="panel">
+    <div class="drop" id="drop">
+      <div>Klik atau seret file lagu ke sini</div>
+      <div class="hint" id="fileInfo">Belum ada file</div>
+      <input type="file" id="file" accept="audio/*,video/mp4,video/*" hidden>
+    </div>
+    <div id="status" style="margin-top:10px"></div>
+  </div>
+
+  <div class="panel">
+    <div class="grid">
+      <div>
+        <label>Nama lagu</label>
+        <input type="text" id="name" value="lagu">
+        <div class="hint" id="slugHint"></div>
+      </div>
+      <div>
+        <label>BPM (kosong = otomatis)</label>
+        <input type="number" id="bpm" step="0.01" min="40" max="300" placeholder="auto">
+        <div class="hint">Kalau tempo terasa salah (setengah/dua kali), isi manual.</div>
+      </div>
+      <div>
+        <label>Offset grid ms (kosong = otomatis)</label>
+        <input type="number" id="offset" step="1" placeholder="auto">
+        <div class="hint">Geser kalau note terasa terlalu cepat/lambat.</div>
+      </div>
+      <div>
+        <label>Sensitivitas: <span id="sensVal">6</span></label>
+        <input type="range" id="sens" min="1" max="10" value="6">
+        <div class="hint">Makin tinggi, makin banyak note.</div>
+      </div>
+      <div>
+        <label>Jarak minimum antar note</label>
+        <select id="gap">
+          <option value="1">1/16 (rapat sekali)</option>
+          <option value="2" selected>2 step (1/8)</option>
+          <option value="3">3 step</option>
+          <option value="4">4 step (1/4)</option>
+          <option value="6">6 step</option>
+          <option value="8">8 step (1/2)</option>
+        </select>
+      </div>
+      <div>
+        <label>Cara menentukan lane</label>
+        <select id="lane">
+          <option value="freq" selected>Berdasarkan nada (rendah ke tinggi)</option>
+          <option value="random">Acak (tanpa lane sama berurutan)</option>
+          <option value="zigzag">Zigzag (kiri-bawah-atas-kanan-atas-bawah)</option>
+        </select>
+      </div>
+      <div>
+        <label>Seed acak</label>
+        <input type="number" id="seed" value="1" min="1" step="1">
+        <div class="hint">Ganti angka untuk pola acak berbeda.</div>
+      </div>
+      <div>
+        <label>Note untuk siapa</label>
+        <select id="side">
+          <option value="player" selected>Pemain saja (lane 0-3)</option>
+          <option value="opp">Lawan saja (lane 4-7)</option>
+          <option value="alt">Bergantian tiap 2 section</option>
+        </select>
+      </div>
+      <div>
+        <label>Speed scroll</label>
+        <input type="number" id="speed" value="2" step="0.1" min="0.5" max="6">
+      </div>
+    </div>
+    <label class="chk"><input type="checkbox" id="limitRep" checked> Batasi lane sama berturut-turut (maks 3)</label>
+  </div>
+
+  <div class="panel">
+    <canvas id="cv"></canvas>
+    <div class="legend">
+      <span><i style="background:#c24b99"></i>Kiri (0)</span>
+      <span><i style="background:#00ffff"></i>Bawah (1)</span>
+      <span><i style="background:#12fa05"></i>Atas (2)</span>
+      <span><i style="background:#f9393f"></i>Kanan (3)</span>
+      <span>Bayangan abu-abu = kekuatan ketukan lagu</span>
+    </div>
+    <div class="stats">
+      <span>BPM: <b id="stBpm">-</b></span>
+      <span>Offset: <b id="stOff">-</b></span>
+      <span>Jumlah note: <b id="stNotes">-</b></span>
+      <span>Note/detik: <b id="stNps">-</b></span>
+      <span>Section: <b id="stSec">-</b></span>
+    </div>
+  </div>
+
+  <div class="panel">
+    <label>Hasil JSON</label>
+    <textarea id="out" readonly placeholder="Hasil chart akan muncul di sini..."></textarea>
+    <div class="btns">
+      <button id="btnDl" disabled>Download .json</button>
+      <button id="btnCopy" class="alt" disabled>Salin JSON</button>
+    </div>
+    <div class="hint" id="pathHint" style="margin-top:8px"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const N = 1024, HOP = 512;
+  const COLORS = ['#c24b99','#00ffff','#12fa05','#f9393f'];
+  const S = { sr:0, fr:0, duration:0, flux:null, avg:null, cent:null, gm:0, fmax:1, bpmAuto:120, json:'', notesDraw:[] };
+
+  /* ---------- FFT (radix-2) ---------- */
+  function makeFFT(n){
+    const levels = Math.round(Math.log2(n));
+    const cosT = new Float32Array(n/2), sinT = new Float32Array(n/2);
+    for(let i=0;i<n/2;i++){ cosT[i]=Math.cos(2*Math.PI*i/n); sinT[i]=Math.sin(2*Math.PI*i/n); }
+    const rev = new Uint32Array(n);
+    for(let i=0;i<n;i++){
+      let r=0;
+      for(let b=0;b<levels;b++) r |= ((i>>b)&1) << (levels-1-b);
+      rev[i]=r;
+    }
+    return function(re, im){
+      for(let i=0;i<n;i++){
+        const j=rev[i];
+        if(j>i){
+          let t=re[i]; re[i]=re[j]; re[j]=t;
+          t=im[i]; im[i]=im[j]; im[j]=t;
+        }
+      }
+      for(let size=2; size<=n; size<<=1){
+        const half=size>>1, step=n/size;
+        for(let i=0;i<n;i+=size){
+          for(let j=i,k=0;j<i+half;j++,k+=step){
+            const l=j+half;
+            const tre = re[l]*cosT[k] + im[l]*sinT[k];
+            const tim = -re[l]*sinT[k] + im[l]*cosT[k];
+            re[l]=re[j]-tre; im[l]=im[j]-tim;
+            re[j]+=tre; im[j]+=tim;
+          }
+        }
+      }
+    };
+  }
+  const fft = makeFFT(N);
+
+  /* ---------- Helper ---------- */
+  function movAvg(a, W){
+    const n=a.length, p=new Float64Array(n+1);
+    for(let i=0;i<n;i++) p[i+1]=p[i]+a[i];
+    const o=new Float32Array(n);
+    for(let i=0;i<n;i++){
+      const lo=Math.max(0,i-W), hi=Math.min(n,i+W+1);
+      o[i]=(p[hi]-p[lo])/(hi-lo);
+    }
+    return o;
+  }
+  function mulberry32(a){
+    return function(){
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      let t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  function slugify(s){
+    const r = s.toLowerCase().trim().replace(/\s+/g,'-').replace(/[^a-z0-9\-_]/g,'');
+    return r || 'lagu';
+  }
+  function setStatus(t){ $('status').textContent = t; }
+  const tick = () => new Promise(r => setTimeout(r, 0));
+
+  /* ---------- Deteksi BPM ---------- */
+  function detectBpm(env, fr){
+    const n = env.length;
+    function interp(x){
+      const i = Math.floor(x);
+      if(i < 0 || i >= n-1) return 0;
+      const f = x - i;
+      return env[i]*(1-f) + env[i+1]*f;
+    }
+    let best = 120, bestScore = -1;
+    for(let bpm=70; bpm<=180; bpm+=0.25){
+      const lag = 60/bpm*fr;
+      const lim = n - Math.ceil(lag*2) - 2;
+      if(lim < 10) continue;
+      let s = 0;
+      for(let i=0;i<lim;i++){
+        const v = env[i];
+        if(v === 0) continue;
+        s += v * (interp(i+lag) + 0.5*interp(i+2*lag));
+      }
+      s /= lim;
+      const w = Math.exp(-0.5*Math.pow(Math.log2(bpm/120)/0.7, 2));
+      s *= w;
+      if(s > bestScore){ bestScore = s; best = bpm; }
+    }
+    return best;
+  }
+
+  function bestOffset(peaks, stepMs){
+    let best = 0, bestScore = -Infinity;
+    const lim = Math.ceil(stepMs);
+    for(let off=0; off<lim; off++){
+      let s = 0;
+      for(let i=0;i<peaks.length;i++){
+        s += peaks[i].s * Math.cos(2*Math.PI*(peaks[i].t - off)/stepMs);
+      }
+      if(s > bestScore){ bestScore = s; best = off; }
+    }
+    return best;
+  }
+
+  /* ---------- Analisis audio (sekali per file) ---------- */
+  async function analyze(file){
+    setStatus('Membaca dan men-decode audio...');
+    $('btnDl').disabled = true; $('btnCopy').disabled = true;
+    await tick();
+
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    let buf;
+    try{
+      buf = await ctx.decodeAudioData(await file.arrayBuffer());
+    }catch(e){
+      setStatus('Gagal decode file. Coba mp3/wav/ogg, atau mp4 yang audionya AAC.');
+      try{ ctx.close(); }catch(_){}
+      return;
+    }
+    try{ ctx.close(); }catch(_){}
+
+    const sr = buf.sampleRate, len = buf.length, nch = buf.numberOfChannels;
+    const mono = new Float32Array(len);
+    for(let c=0;c<nch;c++){
+      const d = buf.getChannelData(c);
+      for(let i=0;i<len;i++) mono[i] += d[i]/nch;
+    }
+    const frames = Math.floor((len - N)/HOP);
+    if(frames < 50){ setStatus('Audio terlalu pendek.'); return; }
+
+    const flux = new Float32Array(frames);
+    const cent = new Float32Array(frames);
+    const re = new Float32Array(N), im = new Float32Array(N);
+    const prev = new Float32Array(N/2);
+    const win = new Float32Array(N);
+    for(let i=0;i<N;i++) win[i] = 0.5 - 0.5*Math.cos(2*Math.PI*i/(N-1));
+    const kmax = Math.min(N/2 - 1, Math.floor(6000*N/sr));
+
+    for(let f=0; f<frames; f++){
+      const off = f*HOP;
+      for(let i=0;i<N;i++){ re[i] = mono[off+i]*win[i]; im[i] = 0; }
+      fft(re, im);
+      let fl = 0, num = 0, den = 0;
+      for(let k=1;k<N/2;k++){
+        const m = Math.sqrt(re[k]*re[k] + im[k]*im[k])/(N/2);
+        const lm = Math.log(1 + 100*m);
+        const d = lm - prev[k];
+        if(d > 0) fl += d;
+        prev[k] = lm;
+        if(k <= kmax){ num += k*m; den += m; }
+      }
+      flux[f] = f === 0 ? 0 : fl;
+      cent[f] = den > 1e-9 ? num/den : 0;
+      if(f % 400 === 0){
+        setStatus('Menganalisis lagu... ' + Math.round(f/frames*100) + '%');
+        await tick();
+      }
+    }
+
+    let sum = 0, mx = 0;
+    for(let i=0;i<frames;i++){ sum += flux[i]; if(flux[i] > mx) mx = flux[i]; }
+    S.sr = sr; S.fr = sr/HOP; S.duration = len/sr;
+    S.flux = flux; S.cent = cent; S.gm = sum/frames; S.fmax = mx || 1;
+    S.avg = movAvg(flux, 8);
+
+    setStatus('Mencari BPM...');
+    await tick();
+    const env = new Float32Array(frames);
+    for(let i=0;i<frames;i++) env[i] = Math.max(0, flux[i] - S.avg[i]);
+    S.bpmAuto = detectBpm(env, S.fr);
+
+    setStatus('Selesai dianalisis. Atur pengaturan di atas kalau perlu.');
+    generate();
+  }
+
+  /* ---------- Generate chart (cepat, bisa diulang) ---------- */
+  function generate(){
+    if(!S.flux) return;
+    const sens = +$('sens').value;
+    const minGap = +$('gap').value;
+    const mode = $('lane').value;
+    const side = $('side').value;
+    const speed = parseFloat($('speed').value) || 2;
+    const limitRep = $('limitRep').checked;
+    const seed = Math.max(1, parseInt($('seed').value) || 1);
+    const name = $('name').value.trim() || 'lagu';
+    const slug = slugify(name);
+
+    let bpm = parseFloat($('bpm').value);
+    if(!(bpm > 0)) bpm = S.bpmAuto;
+    const stepMs = 60000/bpm/4;
+    const sectionMs = stepMs*16;
+
+    /* 1. Cari puncak (onset) */
+    const mult = 2.0 - sens*0.13;
+    const delta = S.gm*0.25;
+    const f = S.flux, n = f.length, R = 3;
+    const peaks = [];
+    for(let i=R;i<n-R;i++){
+      const v = f[i];
+      if(v <= S.avg[i]*mult + delta) continue;
+      let isMax = true;
+      for(let k=1;k<=R;k++){
+        if(f[i-k] > v || f[i+k] >= v){ isMax = false; break; }
+      }
+      if(isMax){
+        peaks.push({
+          t: (i*HOP + N/2)/S.sr*1000,
+          s: v,
+          c: (S.cent[i] + S.cent[Math.min(i+1, n-1)])/2
+        });
+      }
+    }
+
+    /* 2. Offset */
+    let offset = parseFloat($('offset').value);
+    if(isNaN(offset)) offset = bestOffset(peaks, stepMs);
+    $('bpm').placeholder = 'auto: ' + S.bpmAuto.toFixed(2);
+    $('offset').placeholder = 'auto: ' + Math.round(offset);
+
+    /* 3. Kuantisasi ke grid 1/16 + jarak minimum */
+    const list = [];
+    for(const p of peaks){
+      const step = Math.round((p.t - offset)/stepMs);
+      if(step < 0) continue;
+      const last = list[list.length-1];
+      if(last && step - last.step < minGap){
+        if(p.s > last.s){ last.step = step; last.s = p.s; last.c = p.c; }
+        continue;
+      }
+      list.push({ step: step, s: p.s, c: p.c });
+    }
+
+    /* 4. Tentukan lane 0-3 */
+    let lanes = new Array(list.length);
+    if(mode === 'freq'){
+      const cs = list.map(x => x.c).sort((a,b) => a-b);
+      const q = [0.25, 0.5, 0.75].map(p => cs.length ? cs[Math.floor(p*(cs.length-1))] : 0);
+      for(let i=0;i<list.length;i++){
+        const c = list[i].c;
+        lanes[i] = c <= q[0] ? 0 : c <= q[1] ? 1 : c <= q[2] ? 2 : 3;
+      }
+    }else if(mode === 'random'){
+      const rnd = mulberry32(seed);
+      let prevLane = -1;
+      for(let i=0;i<list.length;i++){
+        let l = Math.floor(rnd()*4);
+        if(l === prevLane) l = (l + 1 + Math.floor(rnd()*3)) % 4;
+        lanes[i] = l; prevLane = l;
+      }
+    }else{
+      const pat = [0,1,2,3,2,1];
+      for(let i=0;i<list.length;i++) lanes[i] = pat[i % pat.length];
+    }
+    if(limitRep){
+      let run = 1;
+      for(let i=1;i<lanes.length;i++){
+        if(lanes[i] === lanes[i-1]){
+          run++;
+          if(run > 3){
+            lanes[i] = (lanes[i] + 1 + (i % 3)) % 4;
+            run = 1;
+          }
+        }else{
+          run = 1;
+        }
+      }
+    }
+
+    /* 5. Susun section */
+    const notesFinal = [];
+    let lastSec = 0;
+    for(let i=0;i<list.length;i++){
+      const time = Math.max(0, offset + list[i].step*stepMs);
+      const sec = Math.floor(time/sectionMs);
+      let add = 0;
+      if(side === 'opp') add = 4;
+      else if(side === 'alt') add = ((sec >> 1) & 1) ? 4 : 0;
+      notesFinal.push({ time: Math.round(time*100)/100, sec: sec, lane: lanes[i] + add });
+      if(sec > lastSec) lastSec = sec;
+    }
+    const nSec = Math.max(1, Math.ceil(S.duration*1000/sectionMs), lastSec + 1);
+    const sections = [];
+    for(let i=0;i<nSec;i++){
+      sections.push({
+        sectionNotes: [],
+        sectionBeats: 4,
+        lengthInSteps: 16,
+        mustHitSection: true,
+        bpm: Math.round(bpm*100)/100,
+        changeBPM: false,
+        altAnim: false,
+        gfSection: false,
+        typeOfSection: 0
+      });
+    }
+    for(const nt of notesFinal){
+      sections[nt.sec].sectionNotes.push([nt.time, nt.lane, 0]);
+    }
+
+    /* 6. JSON (1 section per baris biar mudah dibaca) */
+    const rest = {
+      song: name,
+      events: [],
+      bpm: Math.round(bpm*100)/100,
+      needsVoices: false,
+      player1: 'bf',
+      player2: 'dad',
+      gfVersion: 'gf',
+      speed: speed,
+      stage: 'stage',
+      validScore: true
+    };
+    const restStr = JSON.stringify(rest).slice(1, -1);
+    const secStr = sections.map(s => JSON.stringify(s)).join(',\n');
+    S.json = '{"song":{' + restStr + ',"notes":[\n' + secStr + '\n]}}';
+    S.slug = slug;
+    S.notesDraw = notesFinal;
+
+    $('out').value = S.json;
+    $('btnDl').disabled = false;
+    $('btnCopy').disabled = false;
+    $('stBpm').textContent = bpm.toFixed(2);
+    $('stOff').textContent = Math.round(offset) + ' ms';
+    $('stNotes').textContent = notesFinal.length;
+    $('stNps').textContent = (notesFinal.length/S.duration).toFixed(2);
+    $('stSec').textContent = nSec;
+    $('slugHint').textContent = 'Nama file: ' + slug + '.json';
+    $('pathHint').textContent = 'Taruh di: mods/<namamod>/data/' + slug + '/' + slug + '.json';
+    draw();
+  }
+
+  /* ---------- Gambar ringkasan ---------- */
+  function draw(){
+    const cv = $('cv');
+    const w = cv.clientWidth || 900, h = 150;
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = w*dpr; cv.height = h*dpr;
+    const g = cv.getContext('2d');
+    g.setTransform(dpr,0,0,dpr,0,0);
+    g.fillStyle = '#0d0d16'; g.fillRect(0,0,w,h);
+    if(!S.flux) return;
+
+    const n = S.flux.length;
+    g.fillStyle = 'rgba(140,140,170,.18)';
+    for(let x=0;x<w;x++){
+      const i0 = Math.floor(x/w*n), i1 = Math.max(i0+1, Math.floor((x+1)/w*n));
+      let m = 0;
+      for(let i=i0;i<i1&&i<n;i++) if(S.flux[i] > m) m = S.flux[i];
+      const bh = Math.min(1, m/(S.fmax*0.6))*h;
+      g.fillRect(x, h-bh, 1, bh);
+    }
+    const rowH = h/4;
+    g.strokeStyle = 'rgba(255,255,255,.06)';
+    for(let r=1;r<4;r++){ g.beginPath(); g.moveTo(0,r*rowH); g.lineTo(w,r*rowH); g.stroke(); }
+    for(const nt of S.notesDraw){
+      const x = nt.time/1000/S.duration*w;
+      const l = nt.lane % 4;
+      g.fillStyle = COLORS[l];
+      g.globalAlpha = nt.lane >= 4 ? 0.55 : 1;
+      g.fillRect(x, l*rowH + rowH*0.2, 2, rowH*0.6);
+    }
+    g.globalAlpha = 1;
+  }
+
+  /* ---------- Download & salin ---------- */
+  $('btnDl').addEventListener('click', () => {
+    const blob = new Blob([S.json], { type:'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (S.slug || 'lagu') + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+  $('btnCopy').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(S.json);
+    }catch(e){
+      $('out').removeAttribute('readonly'); $('out').select();
+      document.execCommand('copy');
+      $('out').setAttribute('readonly','');
+    }
+    const old = $('btnCopy').textContent;
+    $('btnCopy').textContent = 'Tersalin!';
+    setTimeout(() => $('btnCopy').textContent = old, 1200);
+  });
+
+  /* ---------- Input file ---------- */
+  const drop = $('drop'), fileIn = $('file');
+  drop.addEventListener('click', () => fileIn.click());
+  drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('over'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('over');
+    if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  fileIn.addEventListener('change', () => { if(fileIn.files[0]) loadFile(fileIn.files[0]); });
+
+  function loadFile(file){
+    $('fileInfo').textContent = file.name + ' (' + (file.size/1048576).toFixed(2) + ' MB)';
+    const base = file.name.replace(/\.[^.]+$/, '');
+    $('name').value = base;
+    $('bpm').value = ''; $('offset').value = '';
+    analyze(file);
+  }
+
+  /* ---------- Ubah pengaturan = generate ulang ---------- */
+  let timer = null;
+  function soon(){ clearTimeout(timer); timer = setTimeout(generate, 150); }
+  ['name','bpm','offset','sens','gap','lane','seed','side','speed','limitRep'].forEach(id => {
+    $(id).addEventListener('input', soon);
+    $(id).addEventListener('change', soon);
+  });
+  $('sens').addEventListener('input', () => { $('sensVal').textContent = $('sens').value; });
+  $('name').addEventListener('input', () => { $('slugHint').textContent = 'Nama file: ' + slugify($('name').value) + '.json'; });
+  window.addEventListener('resize', draw);
+  draw();
+})();
+</script>
+</body>
+</html>
